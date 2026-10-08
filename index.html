@@ -21,6 +21,11 @@
     <div class="feedback">
       <p id="status" role="status" aria-live="polite"></p>
       <p id="storage-status" role="status" aria-live="polite"></p>
+      <div class="save-tools" aria-label="Local save recovery">
+        <button type="button" id="export-progress">Export progress</button>
+        <button type="button" id="export-original" hidden>Download original save</button>
+        <button type="button" id="reload-save" hidden>Load other tab save</button>
+      </div>
     </div>
     <nav aria-label="Village navigation"><button type="button" id="board">Noticeboard</button><button type="button" id="host">Host</button><button type="button" id="applications">My applications</button><button class="primary" type="button" id="next">Next step</button></nav>
     <script type="module" src="./src/main.ts"></script>

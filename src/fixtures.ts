@@ -1,4 +1,5 @@
 import type { PlaceId, QuestId, ChatPrompt } from "./contracts";
+import { parseCommunityContent } from "./contentFormat";
 
 // Entirely fictional content, not a renamed production Host/member record.
 export const HOST = {
@@ -24,6 +25,8 @@ export const REPLIES: Record<ChatPrompt, string> = {
   shared: "Maple (fictional): We share the workshop and tidy our tools after creating. There is a separate quiet corner.",
   dates: "Maple (fictional): The dates on your local demo application are saved on this device only. Nothing has been sent to a real Host.",
 };
+
+export const CONTENT = parseCommunityContent({ schema: 1, fictional: true, places: PLACES, quests: QUESTS });
 
 export function demoDate(offset: number, today = new Date()): string {
   const date = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() + offset));

@@ -14,7 +14,7 @@ describe("isolated community adapter", () => {
     const storage = memoryStorage(); storage.values.set("game-session", "PRIVATE-FIXTURE-NOT-A-TOKEN");
     const adapter = createDemoAdapter(storage); adapter.completeQuest("notice"); adapter.reset();
     expect(storage.getItem("game-session")).toBe("PRIVATE-FIXTURE-NOT-A-TOKEN");
-    expect(storage.getItem(STORAGE_KEY)).toBeNull();
+    expect(JSON.parse(storage.getItem(STORAGE_KEY)!)).toMatchObject({ state: { completed: [], applications: [] } });
   });
   it("deduplicates identical applications and blocks overlap", () => {
     const adapter = createDemoAdapter();
