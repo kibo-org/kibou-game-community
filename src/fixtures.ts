@@ -25,6 +25,19 @@ export const REPLIES: Record<ChatPrompt, string> = {
   dates: "Maple (fictional): The dates on your local demo application are saved on this device only. Nothing has been sent to a real Host.",
 };
 
+export const NPC_WELCOME = {
+  en: {
+    greeting: "Maple (fictional): Welcome, maker! This village is an imaginary place to try small ideas. Nothing here is sent to a real person.",
+    village: "Maple (fictional): Read the noticeboard, visit the garden, and sketch something in the studio. You can explore at your own pace.",
+    help: "Maple (fictional): Start with one tiny idea. A room, a short story, or a kinder button can make this village feel more welcoming.",
+  },
+  ja: {
+    greeting: "メープル（架空のキャラクター）：ようこそ！ここは、小さなアイデアを試すための架空の村です。この会話が実在の人に送られることはありません。",
+    village: "メープル（架空のキャラクター）：まずは掲示板を読んで、庭やアトリエをのぞいてみてね。自分のペースで、気になる場所から歩いてみよう。",
+    help: "メープル（架空のキャラクター）：小さなアイデアからで大丈夫。部屋や短い物語、使いやすいボタンも、この村を居心地よくしてくれるよ。",
+  },
+} as const;
+
 export function demoDate(offset: number, today = new Date()): string {
   const date = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() + offset));
   return date.toISOString().slice(0, 10);
