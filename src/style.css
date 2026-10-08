@@ -37,6 +37,8 @@ input { display: block; width: 100%; min-width: 0; min-height: 48px; padding: 8p
 .application strong { display: block; font-size: 14px; margin-bottom: 12px; }
 .application button { margin: 4px 6px 4px 0; }
 .reply { border-left: 3px solid #397bbb; padding: 10px 14px; background: #eef5fa; }
+.garden-quest select { font: inherit; width: 100%; min-height: 48px; padding: 8px; background: #fff; color: inherit; border: 1px solid #c9d7cc; border-radius: 4px; }
+.garden-quest button { display: block; width: 100%; margin: 10px 0; overflow-wrap: anywhere; }
 #status, #storage-status { padding: 6px 24px; font-size: 13px; min-height: 28px; margin: 0; }
 #storage-status { color: #586b5e; }
 nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 8px 24px max(8px, env(safe-area-inset-bottom)); border-top: 1px solid #d9e3da; background: #fff; }
