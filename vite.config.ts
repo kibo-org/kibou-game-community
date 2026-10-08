@@ -7,6 +7,12 @@ const root = fileURLToPath(new URL(".", import.meta.url));
 const sourceRoot = fileURLToPath(new URL("./src", import.meta.url));
 const engineRoot = realpathSync(fileURLToPath(new URL("./node_modules/playcanvas", import.meta.url)));
 const policy = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; frame-ancestors 'none'; frame-src 'none'; worker-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'";
+const headers = {
+  "Content-Security-Policy": policy,
+  "X-Frame-Options": "DENY",
+  "X-Content-Type-Options": "nosniff",
+  "Referrer-Policy": "no-referrer",
+};
 const boundary: Plugin = {
   name: "offline-community-boundary", enforce: "pre",
   resolveId(source) {
@@ -29,12 +35,12 @@ const boundary: Plugin = {
       telemetry: false, login: false, identity_documents: false, real_applications: false,
       engine: "playcanvas", engine_version: "2.20.6", renderer: "3d",
     }, null, 2) + "\n" });
-    this.emitFile({ type: "asset", fileName: "_headers", source: `/*\n  Content-Security-Policy: ${policy}\n  X-Frame-Options: DENY\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: no-referrer\n` });
+    this.emitFile({ type: "asset", fileName: "_headers", source: "/*\n" + Object.entries(headers).map(([name, value]) => `  ${name}: ${value}\n`).join("") });
   },
 };
 export default defineConfig({
   root, publicDir: false, envDir: false, envPrefix: "__COMMUNITY_NO_PUBLIC_ENV__", base: "./",
   plugins: [boundary], build: { outDir: "dist", emptyOutDir: true, sourcemap: false },
-  server: { host: "127.0.0.1", port: 5175, strictPort: true, hmr: false, fs: { strict: true, allow: [root] } },
-  preview: { host: "127.0.0.1", port: 5175, strictPort: true },
+  server: { host: "127.0.0.1", port: 5175, strictPort: true, hmr: false, headers, fs: { strict: true, allow: [root] } },
+  preview: { host: "127.0.0.1", port: 5175, strictPort: true, headers },
 });

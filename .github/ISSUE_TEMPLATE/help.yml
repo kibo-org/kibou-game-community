@@ -1,0 +1,26 @@
+name: Getting started help / はじめ方の相談
+description: No code required / コードを書かなくても相談できます
+title: "[Help] "
+body:
+  - type: markdown
+    attributes:
+      value: "This Issue is PUBLIC. English or Japanese is welcome. Do not attach secrets, personal emails, local paths, full logs or private screenshots. Security reports go privately to SECURITY.md. / 誰でも読める公開相談です。秘密情報、個人メール、端末のパス、ログ全文や私的な画面は載せないでください。"
+  - type: textarea
+    id: goal
+    attributes:
+      label: What would you like to try? / 何を試したいですか？
+      description: An idea or one sentence is enough / アイデアや一文だけでも大丈夫です
+    validations:
+      required: true
+  - type: textarea
+    id: blocked
+    attributes:
+      label: Where are you stuck? / どこで困っていますか？
+      description: Describe the step; a short sanitized error is optional / 手順を説明してください。個人情報を除いた短いエラーは任意です
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Before posting / 投稿前の確認
+      options:
+        - label: "I removed personal data and secrets / 個人情報と秘密情報を含めていません"
+          required: true

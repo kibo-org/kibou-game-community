@@ -6,6 +6,9 @@ device. There are no real accounts, Hosts, bookings, uploads or production APIs.
 
 ## Join In
 
+New to coding or GitHub? Start with [a ten-minute first change / はじめの10分](START_HERE.md).
+You can also [ask for help without writing code](https://github.com/kibo-org/kibou-game-community/issues/new?template=help.yml).
+
 You do not need an invitation or upstream write access. Start with an Issue,
 Fork the repository into your own account, make a small change and open a PR.
 Maintainers review the final revision before merging. External contributor CI
