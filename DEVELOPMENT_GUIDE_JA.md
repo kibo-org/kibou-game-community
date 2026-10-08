@@ -32,7 +32,8 @@ WebGL を使えない端末でも下部のナビゲーションから架空の�
 採用された変更は、管理者が別の非公開 PR で正式ゲームへ適用します。
 このリポジトリの申請、Host 切替、承認、会話は本人確認や実際の予約の権限にはなりません。
 手順は [PRODUCTION_ADOPTION.md](PRODUCTION_ADOPTION.md) を参照してください。
-検証結果と未実施項目は [REVIEW_3D.md](REVIEW_3D.md) に記録します。
+検証結果と未実施項目は [PUBLICATION_AUDIT.md](PUBLICATION_AUDIT.md) に記録します。
+初めての方は [START_HERE.md](START_HERE.md) の10分タスクと困ったときの案内から始めてください。
 
 ## 2. 公開コミュニティへの参加
 
