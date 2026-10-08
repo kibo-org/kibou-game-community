@@ -33,41 +33,85 @@ export function createLocalStore(storage?: Pick<Storage, "getItem" | "setItem" |
   let state = emptyState();
   let status: StorageStatus = storage ? "saved" : "session";
   let protectedSave = false;
-  try {
-    const raw = storage?.getItem(STORAGE_KEY);
-    if (raw !== undefined && raw !== null) {
-      if (raw.length > 16_384) throw new Error("Unsupported demo save");
-      const parsed: unknown = JSON.parse(raw);
-      const clean = sanitizeState(parsed);
-      if (!isCompleteSave(parsed, clean)) throw new Error("Unsupported demo save");
-      state = clean;
+  let expectedRaw: string | null = null;
+  let original: string | null = null;
+  function load() {
+    try {
+      const raw = storage?.getItem(STORAGE_KEY) ?? null;
+      expectedRaw = raw;
+      original = raw;
+      if (raw !== null) {
+        if (raw.length > 16_384) throw new Error("Unsupported demo save");
+        const parsed: unknown = JSON.parse(raw);
+        let value = parsed;
+        if (parsed && typeof parsed === "object" && "format" in parsed) {
+          const envelope = parsed as Record<string, unknown>;
+          if (envelope.format !== "community-save-v2" || typeof envelope.revision !== "string"
+            || !/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/.test(envelope.revision)
+            || Object.keys(envelope).sort().join(",") !== "format,revision,state") throw new Error("Unsupported demo save");
+          value = envelope.state;
+        }
+        const clean = sanitizeState(value);
+        if (!isCompleteSave(value, clean)) throw new Error("Unsupported demo save");
+        state = clean;
+      } else state = emptyState();
+      protectedSave = false;
+      original = null;
+      status = storage ? "saved" : "session";
+    } catch {
+      // Keep unreadable data untouched until the user explicitly resets this demo.
+      protectedSave = true;
+      status = "protected";
     }
-  } catch {
-    // Keep unreadable data untouched until the user explicitly resets this demo.
-    protectedSave = true;
-    status = "protected";
   }
+  load();
+  const sync = () => {
+    if (!storage) return;
+    try { if (storage.getItem(STORAGE_KEY) !== expectedRaw) status = "conflict"; }
+    catch { status = "save-failed"; }
+  };
+  const checkVersion = () => {
+    if (storage) {
+      let raw: string | null;
+      try { raw = storage.getItem(STORAGE_KEY); }
+      catch { status = "save-failed"; throw new Error("Cannot verify the latest save. Export your progress and retry later."); }
+      if (raw !== expectedRaw) status = "conflict";
+    }
+    if (status === "conflict") throw new Error("Another tab changed this save. Export your progress before loading its save.");
+  };
+  const write = (next: CommunityState) => {
+    const raw = JSON.stringify({ format: "community-save-v2", revision: crypto.randomUUID(), state: next });
+    storage!.setItem(STORAGE_KEY, raw);
+    expectedRaw = raw;
+    status = "saved";
+  };
   return {
     snapshot: () => structuredClone(state),
     persistent: () => status === "saved",
     storageStatus: () => status,
+    sync,
+    reload() { load(); return structuredClone(state); },
+    exportProgress: () => JSON.stringify(state, null, 2) + "\n",
+    exportOriginal: () => original,
     save(next: CommunityState) {
+      if (!protectedSave || status === "conflict") checkVersion();
       state = sanitizeState(next);
       if (protectedSave || !storage) return structuredClone(state);
       try {
-        storage.setItem(STORAGE_KEY, JSON.stringify(state));
-        status = "saved";
+        write(state);
       } catch { status = "save-failed"; }
       return structuredClone(state);
     },
     reset() {
-      try { storage?.removeItem(STORAGE_KEY); }
+      checkVersion();
+      try { if (storage) write(emptyState()); }
       catch {
         if (!protectedSave) status = "save-failed";
-        throw new Error("The demo save could not be deleted. Your current progress has not been reset.");
+        throw new Error("The demo save could not be reset. Your current progress has not been reset.");
       }
       state = emptyState();
       protectedSave = false;
+      original = null;
       status = storage ? "saved" : "session";
       return structuredClone(state);
     },

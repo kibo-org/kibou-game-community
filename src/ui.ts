@@ -15,19 +15,20 @@ export function element<K extends keyof HTMLElementTagNameMap>(
 
 export function createAction(
   label: string,
-  run: () => void,
+  run: () => void | Promise<void>,
   reportError: (message: string) => void,
   primary = false,
 ): HTMLButtonElement {
   const button = element("button", label);
   button.type = "button";
   if (primary) button.className = "primary";
-  button.onclick = () => {
+  button.onclick = async () => {
+    button.disabled = true;
     try {
-      run();
+      await run();
     } catch (error) {
       reportError(error instanceof Error ? error.message : "The local demo could not complete this action.");
-    }
+    } finally { button.disabled = false; }
   };
   return button;
 }

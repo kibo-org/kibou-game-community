@@ -4,6 +4,10 @@ Community contributions can inform the private production Game, but this demo
 is not its account, booking or messaging client. Its local roles and application
 states are fictional and cannot be transferred into real permissions.
 
+For maps/narrative, start with [the versioned content format](CONTENT_FORMAT.md).
+Both repositories must pass identical parser tests and the local compatibility check.
+This checks data compatibility only; no content is auto-imported and no authority is granted.
+
 1. Start with an Issue describing the fictional feature and acceptance criteria.
 2. Submit a focused PR from your public Fork, or discuss a source-only private
    patch with a maintainer. No upstream write access is needed.

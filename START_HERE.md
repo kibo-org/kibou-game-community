@@ -67,6 +67,8 @@ before merge. Submitting a PR never updates the production Game automatically.
   Adding another commit does not hide the previous email. Never force-push upstream.
 - A save cannot be read: it stays protected. Reset demo deletes only fictional progress;
   reset deliberately, not as a troubleshooting step that could lose wanted progress.
+- Another tab changed the save: export progress first, then choose Load other tab save.
+  Download original save preserves unreadable data as text. See [recovery and browser checks](BROWSER_ACCEPTANCE.md).
 
 ## 日本語
 
