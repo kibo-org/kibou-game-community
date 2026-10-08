@@ -1,0 +1,57 @@
+:root { font-family: system-ui, sans-serif; color: #263a32; background: #f7faf8; font-size: 16px; letter-spacing: 0; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100dvh; height: 100dvh; display: grid; grid-template-rows: auto minmax(280px, 1fr) auto auto; }
+button, input { font: inherit; }
+button { min-height: 48px; padding: 10px 14px; background: #fff; border: 1px solid #c9d7cc; border-radius: 6px; color: #263a32; cursor: pointer; }
+button:hover { background: #edf4ee; }
+button:disabled { cursor: default; opacity: .6; }
+button.primary { background: #da5136; border-color: #da5136; color: #fff; }
+button.primary:hover { background: #bb442e; }
+:focus-visible { outline: 3px solid #397bbb; outline-offset: 3px; }
+header { min-height: 84px; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #d9e3da; }
+header strong { display: block; font-size: 18px; }
+header span { display: block; margin-top: 5px; font-size: 12px; color: #586b5e; }
+main { position: relative; display: flex; min-height: 0; }
+.world { position: relative; display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.place-labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.place-labels button { position: absolute; pointer-events: auto; min-height: 44px; padding: 6px 10px; font-size: 13px; background: #ffffffed; }
+canvas { display: block; width: 100%; height: 0; flex: 1; min-height: 160px; touch-action: manipulation; }
+.world-caption { order: -1; padding: 14px 24px; flex-shrink: 0; pointer-events: none; }
+h1 { font-size: 24px; line-height: 1.25; max-width: 340px; margin: 0 0 6px; }
+.world-caption p { margin: 0; font-size: 14px; }
+aside { width: 360px; flex-shrink: 0; background: #fff; border-left: 1px solid #d9e3da; padding: 18px; overflow: auto; }
+[hidden] { display: none !important; }
+.panel-header { display: flex; align-items: start; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+h2 { font-size: 20px; line-height: 1.3; margin: 0; overflow-wrap: anywhere; }
+h3 { font-size: 16px; margin: 20px 0 10px; }
+p, li { line-height: 1.6; overflow-wrap: anywhere; }
+ul { padding-left: 20px; }
+#panel-content > button { display: block; width: 100%; margin: 10px 0; }
+.tags { list-style: none; display: flex; gap: 8px; flex-wrap: wrap; padding: 0; }
+.tags li { background: #edf4ee; color: #37614b; padding: 5px 8px; font-size: 13px; border-radius: 4px; }
+form { display: grid; gap: 12px; }
+label { display: grid; gap: 6px; font-size: 14px; }
+input { display: block; width: 100%; min-width: 0; min-height: 48px; padding: 8px; border: 1px solid #c9d7cc; border-radius: 4px; background: #fff; }
+.application { border-top: 1px solid #d9e3da; padding: 8px 0 16px; }
+.application p { margin: 4px 0; }
+.application strong { display: block; font-size: 14px; margin-bottom: 12px; }
+.application button { margin: 4px 6px 4px 0; }
+.reply { border-left: 3px solid #397bbb; padding: 10px 14px; background: #eef5fa; }
+#status, #storage-status { padding: 6px 24px; font-size: 13px; min-height: 28px; margin: 0; }
+#storage-status { color: #586b5e; }
+nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 8px 24px max(8px, env(safe-area-inset-bottom)); border-top: 1px solid #d9e3da; background: #fff; }
+nav button { min-width: 0; font-size: 14px; overflow-wrap: anywhere; }
+@media (max-width: 720px) {
+  header { padding: 12px; min-height: 80px; }
+  header strong { font-size: 16px; }
+  header button { font-size: 13px; padding: 8px; }
+  .world-caption { padding: 12px 14px; }
+  h1 { font-size: 20px; max-width: 240px; }
+  aside { position: absolute; z-index: 2; bottom: 0; left: 0; width: 100%; max-height: 72%; border-left: 0; border-top: 2px solid #da5136; padding: 14px; }
+  .panel-header { position: sticky; top: -14px; background: #fff; padding: 8px 0; margin-bottom: 8px; }
+  #status, #storage-status { padding: 6px 12px; min-height: 36px; }
+  nav { position: sticky; bottom: 0; width: 100%; padding: 8px 8px max(8px, env(safe-area-inset-bottom)); gap: 5px; z-index: 3; }
+  nav button { font-size: 12px; padding: 6px; min-height: 52px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+@media (max-width: 360px) { nav button { font-size: 11px; } .place-labels button { font-size: 11px; padding: 4px 6px; } }

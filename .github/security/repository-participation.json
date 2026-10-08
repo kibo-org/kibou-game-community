@@ -1,0 +1,8 @@
+{
+  "allow_forking": true,
+  "allow_auto_merge": false,
+  "has_issues": true,
+  "has_wiki": false,
+  "has_projects": false,
+  "delete_branch_on_merge": true
+}

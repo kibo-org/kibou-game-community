@@ -1,0 +1,40 @@
+name: Small development task / 小さな開発タスク
+description: Agree scope and acceptance before coding / 実装前に範囲を相談する
+title: "[Task] "
+body:
+  - type: markdown
+    attributes:
+      value: "English or Japanese only. Use fictional examples; do not include personal data, credentials, private files or production logs."
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal / 目的
+      description: What should become easier for the player?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope / 変更範囲
+      description: Starting files and what is deliberately out of scope.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance / 完了条件
+      description: Observable results, keyboard/mobile behavior and storage expectations.
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks / 注意点
+      description: Privacy, assets, dependencies, save migration and proposed verification.
+  - type: checkboxes
+    id: boundary
+    attributes:
+      label: Boundary / 開発境界
+      options:
+        - label: "Fictional examples only; no external service or production integration."
+          required: true

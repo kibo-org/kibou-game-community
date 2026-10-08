@@ -1,0 +1,30 @@
+name: Original asset or story
+description: Propose original fictional artwork or narrative with licensing information.
+title: "[Asset] "
+body:
+  - type: markdown
+    attributes:
+      value: "No real faces, addresses, member/Host data or copied production assets. Do not upload other people's work without rights to license it. Maintainers review provenance before use."
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed asset or story
+      description: Describe the fictional contribution first; uploading a file is not required.
+    validations:
+      required: true
+  - type: textarea
+    id: provenance
+    attributes:
+      label: Origin and attribution
+      description: Use a creator credit or pseudonym, source and license; do not publish legal names or contacts. Disclose third-party or AI assistance and unresolved rights.
+    validations:
+      required: true
+  - type: checkboxes
+    id: rights
+    attributes:
+      label: Before submitting
+      options:
+        - label: The proposal is fictional and contains no personal data or credentials.
+          required: true
+        - label: I understand accepted original Demo assets use CC BY 4.0 and code uses MIT, subject to rights review.
+          required: true

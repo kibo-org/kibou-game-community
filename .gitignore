@@ -1,0 +1,17 @@
+node_modules/
+/node_modules
+dist/
+coverage/
+.vite/
+.DS_Store
+.env
+.env.*
+*.log
+*.patch
+*.diff
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+*.pem
+*.key

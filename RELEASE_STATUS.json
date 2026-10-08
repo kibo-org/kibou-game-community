@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "visibility": "private-publication-preparation",
+  "code_license": "MIT",
+  "asset_license": "CC-BY-4.0",
+  "brand_rights": "reserved",
+  "owner_license_approval": "confirmed-2026-10-06",
+  "fresh_history_required": true,
+  "production_connected": false,
+  "engine": { "name": "playcanvas", "version": "2.20.6", "renderer": "3d", "production_assets_imported": false },
+  "participation": {
+    "mode": "public-fork-issue-pr-after-publication-gate",
+    "contributor_write_access": "not-granted",
+    "production_access": "none",
+    "merge": "final-maintainer-review-and-required-ci"
+  },
+  "validation": {
+    "clean_locked_dependency_install": "passed-2026-10-07",
+    "dependency_security_scan": "zero-known-vulnerabilities-2026-10-07",
+    "source_history_secret_scan": "gitleaks-8.30.1-eight-commits-zero-findings",
+    "public_record_secret_scan": "issues-prs-and-four-actions-logs-zero-findings",
+    "typecheck_build_tests": "passed-sixteen-tests-2026-10-07",
+    "final_public_history_scan": "pending",
+    "github_permission_review": "pending-new-repository-readback",
+    "required_pr_review": "pending-public-main-protection-readback",
+    "real_iphone_safari": "pending",
+    "independent_penetration_test": "not-performed"
+  },
+  "public_release_approved": false,
+  "public_hosted_game": false
+}

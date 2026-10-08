@@ -1,0 +1,26 @@
+name: Fictional demo bug
+description: Report an interaction or accessibility problem without personal data.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "Do not paste production logs, local file paths, account data or secrets. Use only the fictional demo. Report security problems privately through SECURITY.md."
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps and expected result
+      description: Describe the action, what happened and what you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Optional device and browser
+      description: General browser/device information only; no identifiers or full logs.
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Before submitting
+      options:
+        - label: My report contains no personal information or credentials.
+          required: true
