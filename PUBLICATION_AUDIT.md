@@ -29,12 +29,22 @@ logs are not imported into this replacement repository.
 - Added ongoing public-author identity and SHA-verified Gitleaks history checks
   to CI. Contributor changes still require human privacy/license/code review.
 
-## Final Publication Gates
+## Final Source Checks And Server Evidence
 
-Final export/history/branch scans, clean author metadata, replacement repository
-credential scope, required reviews and all-external-contributor workflow approval
-must be verified and recorded before publication is declared complete. Configuration
-JSON alone is not evidence of server-side enforcement. See RELEASE_STATUS.json.
+The clean allowlisted replacement has fresh Git history. All three task changes
+were recreated on separate branches, without importing commit metadata. Gitleaks
+and author checks passed across main and all three branches. Main passed sixteen
+tests; the welcome, garden and focus branches passed eighteen, twenty and twenty-two
+tests respectively, plus each branch's typecheck, build and boundary checks.
+Replacement repository Secrets, accessible organization Secrets, Actions variables,
+Environments and deploy keys were each verified empty before publication.
+
+Final record scan, public visibility, protected main, all-external-contributor CI
+approval and real GitHub CI results are recorded in
+[audit Issue #7](https://github.com/kibo-org/kibou-game-community/issues/7).
+Publication is not complete until that record verifies the live gates. Configuration
+JSON alone is not evidence of server-side enforcement. No raw API responses/logs
+or personal email addresses belong in this public report.
 
 ## Limits
 
