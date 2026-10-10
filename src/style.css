@@ -30,6 +30,8 @@ ul { padding-left: 20px; }
 .tags { list-style: none; display: flex; gap: 8px; flex-wrap: wrap; padding: 0; }
 .tags li { background: #edf4ee; color: #37614b; padding: 5px 8px; font-size: 13px; border-radius: 4px; }
 form { display: grid; gap: 12px; }
+.npc-welcome select { font: inherit; width: 100%; min-height: 48px; padding: 8px; background: #fff; color: inherit; border: 1px solid #c9d7cc; border-radius: 4px; }
+.npc-welcome button { display: block; width: 100%; margin: 10px 0; overflow-wrap: anywhere; }
 label { display: grid; gap: 6px; font-size: 14px; }
 input { display: block; width: 100%; min-width: 0; min-height: 48px; padding: 8px; border: 1px solid #c9d7cc; border-radius: 4px; background: #fff; }
 .application { border-top: 1px solid #d9e3da; padding: 8px 0 16px; }
