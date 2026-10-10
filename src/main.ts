@@ -2,6 +2,7 @@ import { createDemoAdapter } from "./demoAdapter";
 import { HOST, PLACES, QUESTS, demoDate } from "./fixtures";
 import { createVillageScene } from "./scene";
 import type { PlaceId, ChatPrompt } from "./contracts";
+import { createGardenQuest } from "./gardenQuest";
 import { createAction, element, required } from "./ui";
 
 // Discard platform handoff hints; never read production tickets, user IDs or sessions.
@@ -36,7 +37,13 @@ function openPlace(place: PlaceId) {
   if (place === "home") { openHost(); return; }
   show(PLACES.find(item => item.id === place)?.name ?? "Village");
   const quest = QUESTS.find(item => item.place === place);
-  if (quest) {
+  if (quest && place === "garden") {
+    content.append(createGardenQuest(adapter.snapshot().completed.includes("grow"), () => {
+      adapter.completeQuest("grow");
+      refresh();
+      say("Garden quest completed on this device only.");
+    }, say));
+  } else if (quest) {
     content.append(element("h3", quest.name), element("p", quest.text));
     const done = adapter.snapshot().completed.includes(quest.id);
     const complete = action(done ? "Completed" : quest.action, () => {
