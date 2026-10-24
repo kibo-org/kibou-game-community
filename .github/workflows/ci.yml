@@ -30,7 +30,9 @@ jobs:
           fi
       - run: npm ci --ignore-scripts
       - name: Check public commit identities
-        run: node scripts/check-public-authors.mjs
+        run: |
+          node --test scripts/check-public-authors.test.mjs
+          node scripts/check-public-authors.mjs
       - name: Scan complete history for credentials
         shell: bash
         run: |
