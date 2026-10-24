@@ -1,5 +1,7 @@
 # Kibou Game Community
 
+English | [日本語](README.ja.md)
+
 An offline-first 3D PlayCanvas village for making rooms, quests and playful ideas.
 All characters, applications and conversations are fictional and local to your
 device. There are no real accounts, Hosts, bookings, uploads or production APIs.
