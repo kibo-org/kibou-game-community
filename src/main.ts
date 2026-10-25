@@ -3,6 +3,7 @@ import { HOST, PLACES, QUESTS, demoDate } from "./fixtures";
 import { createVillageScene } from "./scene";
 import type { PlaceId, ChatPrompt } from "./contracts";
 import { createAction, element, required } from "./ui";
+import { createPanelFocus } from "./panelFocus";
 
 // Discard platform handoff hints; never read production tickets, user IDs or sessions.
 if (location.search || location.hash) history.replaceState(null, "", location.pathname);
@@ -11,14 +12,14 @@ try { storage = localStorage; } catch { /* Session-only play is still available.
 const adapter = createDemoAdapter(storage);
 const panel = required("panel"), content = required("panel-content"), title = required("panel-title"), status = required("status");
 let hostView = false;
-let returnFocus: HTMLElement | undefined;
+const panelFocus = createPanelFocus({ panel, heading: title, fallback: required("next") });
 const say = (message: string) => { status.textContent = message; };
 const action = (label: string, run: () => void, primary = false) => createAction(label, run, say, primary);
-const close = () => { panel.hidden = true; returnFocus?.focus({ preventScroll: true }); };
+const close = () => panelFocus.close();
 function show(name: string) {
-  if (panel.hidden && document.activeElement instanceof HTMLElement) returnFocus = document.activeElement;
+  panelFocus.remember();
   title.textContent = name; content.replaceChildren(); panel.hidden = false;
-  title.tabIndex = -1; title.focus({ preventScroll: true });
+  panelFocus.focusHeading();
 }
 function refresh() {
   const state = adapter.snapshot();
@@ -129,7 +130,12 @@ required("reset").onclick = () => {
     refresh(); say(error instanceof Error ? error.message : "The fictional demo could not be reset.");
   }
 };
-document.addEventListener("keydown", event => { if (event.key === "Escape" && !panel.hidden) close(); });
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && !panel.hidden && !event.defaultPrevented && !event.isComposing) {
+    event.preventDefault();
+    close();
+  }
+});
 window.addEventListener("pagehide", () => scene.dispose(), { once: true });
 // Do not retain a disposed canvas when restored from the browser's back-forward cache.
 window.addEventListener("pageshow", event => { if (event.persisted) location.reload(); });
