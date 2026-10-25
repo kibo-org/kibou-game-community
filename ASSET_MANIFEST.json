@@ -3,6 +3,17 @@
   "scope": "new-fictional-community-assets-only",
   "assets": [
     {
+      "id": "fictional-seed-and-water-quest",
+      "path": "src/gardenQuest.ts",
+      "kind": "fictional-narrative",
+      "creator": "Kibou Community contributors",
+      "origin": "new-original-demo",
+      "license": "CC-BY-4.0",
+      "code_license": "MIT",
+      "contains_real_person_data": false,
+      "credit": "Kibou Community contributors, CC BY 4.0"
+    },
+    {
       "id": "procedural-village-design",
       "path": "src/world.ts",
       "kind": "original-procedural-3d-visual-design",
