@@ -1,5 +1,6 @@
 import { createDemoAdapter } from "./demoAdapter";
 import { HOST, PLACES, QUESTS, demoDate } from "./fixtures";
+import { createNpcWelcome } from "./npcWelcome";
 import { createVillageScene } from "./scene";
 import type { PlaceId, ChatPrompt } from "./contracts";
 import { createAction, element, required } from "./ui";
@@ -45,6 +46,7 @@ function openPlace(place: PlaceId) {
     complete.disabled = done; content.append(complete);
   }
   if (place === "board") {
+    content.append(createNpcWelcome());
     content.append(element("h3", "Around the village"));
     for (const item of PLACES.filter(item => item.id !== "board")) content.append(action(item.name, () => scene.go(item.id)));
   }
