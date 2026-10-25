@@ -3,17 +3,22 @@ import { HOST, PLACES, QUESTS, demoDate } from "./fixtures";
 import { createVillageScene } from "./scene";
 import type { PlaceId, ChatPrompt } from "./contracts";
 import { createAction, element, required } from "./ui";
+import { STORAGE_KEY } from "./localStore";
 
 // Discard platform handoff hints; never read production tickets, user IDs or sessions.
 if (location.search || location.hash) history.replaceState(null, "", location.pathname);
 let storage: Storage | undefined;
-try { storage = localStorage; } catch { /* Session-only play is still available. */ }
+try { if (navigator.locks) storage = localStorage; } catch { /* Session-only play is still available. */ }
 const adapter = createDemoAdapter(storage);
 const panel = required("panel"), content = required("panel-content"), title = required("panel-title"), status = required("status");
 let hostView = false;
 let returnFocus: HTMLElement | undefined;
 const say = (message: string) => { status.textContent = message; };
-const action = (label: string, run: () => void, primary = false) => createAction(label, run, say, primary);
+const exclusive = async (run: () => void) => {
+  if (storage) await navigator.locks.request(STORAGE_KEY, run);
+  else run();
+};
+const action = (label: string, run: () => void, primary = false) => createAction(label, () => exclusive(run), say, primary);
 const close = () => { panel.hidden = true; returnFocus?.focus({ preventScroll: true }); };
 function show(name: string) {
   if (panel.hidden && document.activeElement instanceof HTMLElement) returnFocus = document.activeElement;
@@ -29,8 +34,11 @@ function refresh() {
     session: "Session-only demo: progress will be lost when this page closes.",
     protected: "An unreadable or unsupported demo save is protected. New progress stays in memory. Reset explicitly to remove the old save.",
     "save-failed": "Saving failed. Current progress stays in memory and may be lost when this page closes.",
+    conflict: "Another tab changed the save. Export your progress, then choose Load other tab save. No progress will be overwritten.",
   };
   required("storage-status").textContent = messages[adapter.storageStatus()];
+  required<HTMLButtonElement>("export-original").hidden = adapter.exportOriginal() === null;
+  required<HTMLButtonElement>("reload-save").hidden = adapter.storageStatus() !== "conflict";
 }
 function openPlace(place: PlaceId) {
   if (place === "home") { openHost(); return; }
@@ -73,12 +81,14 @@ function openHost() {
     const label = element("label", caption); label.append(input); form.append(label);
   }
   const submit = element("button", "Submit local demo application"); submit.type = "submit"; submit.className = "primary"; form.append(submit);
-  form.onsubmit = event => {
+  form.onsubmit = async event => {
     event.preventDefault();
+    submit.disabled = true;
     try {
-      adapter.apply(arrival.value, departure.value); hostView = false; refresh(); openApplications();
+      await exclusive(() => { adapter.apply(arrival.value, departure.value); hostView = false; refresh(); openApplications(); });
       say("Demo application created locally. Check the storage status. Nothing was sent to a real Host.");
-    } catch (error) { say(error instanceof Error ? error.message : "Could not save the local demo application."); }
+    } catch (error) { refresh(); say(error instanceof Error ? error.message : "Could not save the local demo application."); }
+    finally { submit.disabled = false; }
   };
   content.append(element("h3", "Try a fictional stay"), form);
 }
@@ -121,14 +131,35 @@ required("board").onclick = () => scene.go("board");
 required("host").onclick = () => scene.go("home");
 required("applications").onclick = () => { hostView = false; openApplications(); };
 required("next").onclick = next;
-required("reset").onclick = () => {
+required("reset").onclick = async () => {
   if (!confirm("Delete this fictional demo's local save? Your real Game account and saves are not affected.")) return;
   try {
-    adapter.reset(); scene.reset(); close(); refresh(); say("Local fictional demo reset.");
+    await exclusive(() => { adapter.reset(); scene.reset(); close(); refresh(); }); say("Local fictional demo reset.");
   } catch (error) {
     refresh(); say(error instanceof Error ? error.message : "The fictional demo could not be reset.");
   }
 };
+function download(text: string, name: string) {
+  const url = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
+  const link = element("a"); link.href = url; link.download = name; link.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+required("export-progress").onclick = () => download(adapter.exportProgress(), "community-progress.json");
+required("export-original").onclick = () => {
+  const raw = adapter.exportOriginal();
+  if (raw !== null) download(raw, "community-original-save.txt");
+};
+required("reload-save").onclick = async () => {
+  if (!confirm("Replace this tab's progress with the latest save? Export your progress first.")) return;
+  try { await exclusive(() => { adapter.reload(); close(); refresh(); }); }
+  catch { say("Could not load the latest save. Export your progress and retry later."); }
+};
+window.addEventListener("storage", event => {
+  if (event.storageArea === storage && (event.key === STORAGE_KEY || event.key === null)) { adapter.sync(); refresh(); }
+});
+window.addEventListener("beforeunload", event => {
+  if (adapter.storageStatus() !== "saved") { event.preventDefault(); event.returnValue = ""; }
+});
 document.addEventListener("keydown", event => { if (event.key === "Escape" && !panel.hidden) close(); });
 window.addEventListener("pagehide", () => scene.dispose(), { once: true });
 // Do not retain a disposed canvas when restored from the browser's back-forward cache.

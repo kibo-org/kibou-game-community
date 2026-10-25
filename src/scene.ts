@@ -4,7 +4,7 @@ import type { PlaceId, QuestId } from "./contracts";
 import { buildVillage, worldPoint } from "./world";
 
 export function createVillageScene(canvas: HTMLCanvasElement, open: (place: PlaceId) => void) {
-  const app = new pc.Application(canvas, { graphicsDeviceOptions: { antialias: true, preserveDrawingBuffer: true, deviceTypes: ["webgl2"] } });
+  const app = new pc.Application(canvas, { graphicsDeviceOptions: { antialias: true, deviceTypes: ["webgl2"] } });
   const setupCleanup: (() => void)[] = [];
   try {
     app.graphicsDevice.maxPixelRatio = Math.min(window.devicePixelRatio || 1, 2);
@@ -16,7 +16,8 @@ export function createVillageScene(canvas: HTMLCanvasElement, open: (place: Plac
     sunlight.addComponent("light", { type: "directional", color: new pc.Color(1, 0.96, 0.88), intensity: 1.2, castShadows: false });
     sunlight.setEulerAngles(45, 30, 0); app.root.addChild(sunlight);
     const village = buildVillage(app);
-    let player = { x: 0.48, y: 0.62 }, destination = { ...player }, disposed = false;
+    let player = { x: 0.48, y: 0.62 }, destination = { ...player }, disposed = false, moving = false;
+    app.autoRender = false;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const keys = new Set<string>();
     const nearest = (x: number, y: number) => [...PLACES].sort((a, b) => Math.hypot(a.x - x, a.y - y) - Math.hypot(b.x - x, b.y - y))[0];
@@ -64,11 +65,13 @@ export function createVillageScene(canvas: HTMLCanvasElement, open: (place: Plac
       const target = PLACES.find(item => item.id === place);
       if (!target) return;
       destination = { x: target.x, y: target.y + 0.09 };
+      moving = !reduceMotion;
       if (reduceMotion) { player = { ...destination }; placePlayer(); }
+      app.renderNextFrame = true;
       open(place);
     };
     const update = (delta: number) => {
-      if (document.hidden || disposed) return;
+      if (document.hidden || disposed || (!moving && !keys.size)) return;
       const dt = Math.min(delta, 0.04);
       const dx = Number(keys.has("arrowright") || keys.has("d")) - Number(keys.has("arrowleft") || keys.has("a"));
       const dy = Number(keys.has("arrowdown") || keys.has("s")) - Number(keys.has("arrowup") || keys.has("w"));
@@ -80,8 +83,11 @@ export function createVillageScene(canvas: HTMLCanvasElement, open: (place: Plac
       } else {
         player.x += (destination.x - player.x) * Math.min(1, dt * 5);
         player.y += (destination.y - player.y) * Math.min(1, dt * 5);
+        if (Math.hypot(destination.x - player.x, destination.y - player.y) < 0.0001) {
+          player = { ...destination }; moving = false;
+        }
       }
-      placePlayer(); positionLabels();
+      placePlayer(); app.renderNextFrame = true;
     };
     const pointer = (event: PointerEvent) => {
       if (event.button !== 0) return;
@@ -96,7 +102,9 @@ export function createVillageScene(canvas: HTMLCanvasElement, open: (place: Plac
       if (Math.hypot(place.x - px, place.y - py) < 0.12) go(place.id);
       else {
         destination = { x: Math.max(0.06, Math.min(0.94, px)), y: Math.max(0.06, Math.min(0.94, py)) };
+        moving = !reduceMotion;
         if (reduceMotion) { player = { ...destination }; placePlayer(); }
+        app.renderNextFrame = true;
         canvas.focus({ preventScroll: true });
       }
     };
@@ -123,8 +131,9 @@ export function createVillageScene(canvas: HTMLCanvasElement, open: (place: Plac
       go,
       progress: (quests: QuestId[]) => {
         for (const place of PLACES) village.markers.get(place.id)!.enabled = Boolean(place.quest && quests.includes(place.quest));
+        app.renderNextFrame = true;
       },
-      reset: () => { player = { x: 0.48, y: 0.62 }; destination = { ...player }; keys.clear(); placePlayer(); },
+      reset: () => { player = { x: 0.48, y: 0.62 }; destination = { ...player }; moving = false; keys.clear(); placePlayer(); app.renderNextFrame = true; },
       dispose() {
         if (disposed) return; disposed = true;
         observer.disconnect(); labels.remove(); app.off("update", update);

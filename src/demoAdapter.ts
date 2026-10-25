@@ -10,6 +10,10 @@ export function createDemoAdapter(storage?: Pick<Storage, "getItem" | "setItem" 
     persistent: store.persistent,
     storageStatus: store.storageStatus,
     reset: store.reset,
+    sync: store.sync,
+    reload: store.reload,
+    exportProgress: store.exportProgress,
+    exportOriginal: store.exportOriginal,
     completeQuest(quest: QuestId) {
       if (!QUEST_IDS.includes(quest)) throw new Error("Unknown demo quest");
       const state = store.snapshot();

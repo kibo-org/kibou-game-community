@@ -39,6 +39,8 @@ input { display: block; width: 100%; min-width: 0; min-height: 48px; padding: 8p
 .reply { border-left: 3px solid #397bbb; padding: 10px 14px; background: #eef5fa; }
 #status, #storage-status { padding: 6px 24px; font-size: 13px; min-height: 28px; margin: 0; }
 #storage-status { color: #586b5e; }
+.save-tools { display: flex; gap: 8px; flex-wrap: wrap; padding: 6px 12px; }
+.save-tools button { font-size: 12px; min-height: 44px; }
 nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 8px 24px max(8px, env(safe-area-inset-bottom)); border-top: 1px solid #d9e3da; background: #fff; }
 nav button { min-width: 0; font-size: 14px; overflow-wrap: anywhere; }
 @media (max-width: 720px) {

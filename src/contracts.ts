@@ -4,7 +4,7 @@ export const MAX_APPLICATIONS = 12;
 export type QuestId = typeof QUEST_IDS[number];
 export type ApplicationStatus = "submitted" | "accepted" | "declined";
 export type ChatPrompt = "quiet" | "shared" | "dates";
-export type StorageStatus = "saved" | "session" | "protected" | "save-failed";
+export type StorageStatus = "saved" | "session" | "protected" | "save-failed" | "conflict";
 export type DemoApplication = {
   id: string;
   hostId: "demo-maple";
@@ -26,4 +26,8 @@ export type CommunityPlatformAdapter = {
   reset(): CommunityState;
   persistent(): boolean;
   storageStatus(): StorageStatus;
+  sync(): void;
+  reload(): CommunityState;
+  exportProgress(): string;
+  exportOriginal(): string | null;
 };
